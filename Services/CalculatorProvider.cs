@@ -9,7 +9,7 @@ public class CalculatorService
         _outputService = outputService;
     }
     
-    public float? Calculate(float number1, float number2, OperandType operand)
+    public float? Compute(float number1, float number2, OperandType operand)
     {
         switch (operand)
         {

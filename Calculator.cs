@@ -10,8 +10,8 @@ namespace Lxqtpr.Calculator
             var outputService = new OutputService();
             var inputStringService = new InputStringService();
             var inputService = new InputFloatProvider(outputService, inputStringService);
-            var inputOperandService = new InputOperandProvider(outputService, inputStringService);    
-            var calculatorService = new CalculatorService(outputService)
+            var inputOperandService = new InputOperandProvider(outputService, inputStringService);
+            var calculatorService = new CalculatorService(outputService);
                 
             outputService.Print("Calculator v1.0.0");
 
