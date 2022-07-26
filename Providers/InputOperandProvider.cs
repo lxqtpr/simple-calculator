@@ -1,4 +1,6 @@
-﻿namespace Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Services;
+
+namespace Lxqtpr.Calculator.Providers;
 
 public class InputOperandProvider
 {
