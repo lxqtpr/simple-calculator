@@ -1,4 +1,5 @@
-﻿using Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Factories;
+using Lxqtpr.Calculator.Services;
 using Lxqtpr.Calculator.Services.Base;
 
 namespace Lxqtpr.Calculator.Providers;
@@ -8,10 +9,10 @@ public class InputOperandProvider
     private readonly IOutputService _outputService;
     private readonly InputStringService _inputStringService;
 
-    public InputOperandProvider(IOutputService outputService, InputStringService inputStringService)
+    public InputOperandProvider(OutputSelectionFactory outputSelectionFactory, InputStringService inputStringService)
     {
         _inputStringService = inputStringService;
-        _outputService = outputService;
+        _outputService = outputSelectionFactory.GetOutputService();
     }
     
     public OperandType GetOperand()

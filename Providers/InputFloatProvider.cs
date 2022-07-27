@@ -1,4 +1,5 @@
-﻿using Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Factories;
+using Lxqtpr.Calculator.Services;
 using Lxqtpr.Calculator.Services.Base;
 
 namespace Lxqtpr.Calculator.Providers;
@@ -8,10 +9,10 @@ public class InputFloatProvider
         private readonly IOutputService _outputService;
         private readonly InputStringService _inputStringService;
 
-        public InputFloatProvider(IOutputService outputService, InputStringService inputStringService)
+        public InputFloatProvider(OutputSelectionFactory outputSelectionFactory, InputStringService inputStringService)
         {
             _inputStringService = inputStringService;
-            _outputService = outputService;
+            _outputService = outputSelectionFactory.GetOutputService();
         }
 
        public float GetNumber()

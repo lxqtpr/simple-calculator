@@ -1,4 +1,5 @@
-﻿using Lxqtpr.Calculator.Services.Base;
+﻿using Lxqtpr.Calculator.Factories;
+using Lxqtpr.Calculator.Services.Base;
 
 namespace Lxqtpr.Calculator.Services;
 
@@ -6,9 +7,9 @@ public class CalculatorProvider
 {
     private readonly IOutputService _outputService;
 
-    public CalculatorProvider(IOutputService outputService)
+    public CalculatorProvider(OutputSelectionFactory outputSelectionFactory)
     {
-        _outputService = outputService;
+        _outputService = outputSelectionFactory.GetOutputService();
     }
     
     public float? Compute(float number1, float number2, OperandType operand)

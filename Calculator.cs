@@ -1,6 +1,8 @@
-﻿using Lxqtpr.Calculator.Providers;
+﻿using Lxqtpr.Calculator.Factories;
+using Lxqtpr.Calculator.Providers;
 using Lxqtpr.Calculator.Services;
 using Lxqtpr.Calculator.Services.Base;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lxqtpr.Calculator
 {
@@ -8,49 +10,62 @@ namespace Lxqtpr.Calculator
     {
         private static void Main(string[] args)
         {
-            if (!args.Any())
-            {
-                throw new ArgumentNullException();
-            }
 
-            IOutputService outputService;
+            var services = new ServiceCollection();
+            services.AddTransient<IOutputService, ConsoleOutputService>();
+            services.AddTransient<IOutputService, MessageBoxOutputService>();
+            services.AddTransient<InputStringService>();
+            services.AddTransient<InputFloatProvider>();
+            services.AddTransient<InputOperandProvider>();
+            services.AddTransient<CalculatorProvider>();
+            services.AddTransient<OutputSelectionFactory>();
+
+            var serviceProvider = services.BuildServiceProvider();
             
-            var values = args[0].Split('=');
-            if (values[1] == "console")
-            {
-                outputService = new ConsoleOutputService();
-            }
-            else { outputService = new MessageBoxOutputService(); }
+            var outputServices = serviceProvider.GetServices<IOutputService>();
+            var inputFloatProvider = serviceProvider.GetRequiredService<InputFloatProvider>();
+            var inputOperandProvider = serviceProvider.GetRequiredService<InputOperandProvider>();
+            var calculatorProvider = serviceProvider.GetRequiredService<CalculatorProvider>();
 
-            var inputStringService = new InputStringService();
-            var inputService = new InputFloatProvider(outputService, inputStringService);
-            var inputOperandService = new InputOperandProvider(outputService, inputStringService);
-            var calculatorService = new CalculatorProvider(outputService);
-                
-            outputService.Print("Calculator v1.0.0");
+            var outputService = ProcessArguments(args, outputServices);
+            
+            outputService.Print("Calculator v4.0.0");
 
             outputService.Print("Enter first number (float)");
-            var number1 = inputService.GetNumber();
+            var number1 = inputFloatProvider.GetNumber();
 
             outputService.Print("Enter second number (float)");
-            var number2 = inputService.GetNumber();
+            var number2 = inputFloatProvider.GetNumber();
 
-            var operand = inputOperandService.GetOperand();
+            var operand = inputOperandProvider.GetOperand();
             if (operand == OperandType.None)
             {
                 outputService.Print("Wrong operand. Good bue");
                 return;
             }
 
-            var result = calculatorService.Compute(number1, number2, operand);
+            var result = calculatorProvider.Compute(number1, number2, operand);
             if (result is not null)
             {
                 outputService.Print(result.Value.ToString("F"));
             }
             
         }
-        
-        
+
+        private static IOutputService ProcessArguments(string[] args, IEnumerable<IOutputService> outputServices)
+        {
+            if (!args.Any())
+            {
+                throw new ArgumentNullException();
+            }
+            var values = args[0].Split('=');
+            if (values[1] == "console")
+            {
+              return outputServices.First(x => x.GetType() == typeof(ConsoleOutputService));
+            }
+            return outputServices.First(x => x.GetType() == typeof(MessageBoxOutputService));
+            
+        }
     }
 }
 
