@@ -1,4 +1,4 @@
-﻿namespace Lxqtpr.Calculator.Services.Base;
+﻿namespace Lxqtpr.Calculator.Shell.Services.Base;
 
 public abstract class OutputServiceBase: IOutputService
 {

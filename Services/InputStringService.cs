@@ -1,4 +1,4 @@
-﻿namespace Lxqtpr.Calculator.Services;
+﻿namespace Lxqtpr.Calculator.Shell.Services;
 
 public class InputStringService
 {

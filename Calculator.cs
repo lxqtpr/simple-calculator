@@ -1,8 +1,5 @@
 ﻿using Lxqtpr.Calculator.Factories;
-using Lxqtpr.Calculator.Providers;
-using Lxqtpr.Calculator.Services;
-using Lxqtpr.Calculator.Services.Base;
-using Microsoft.Extensions.Configuration;
+using Lxqtpr.Calculator.Shell.Providers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lxqtpr.Calculator
@@ -11,27 +8,10 @@ namespace Lxqtpr.Calculator
     {
         private static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var services = new ServiceCollection();
-            services.AddTransient<IOutputService, ConsoleOutputService>();  
-            services.AddTransient<IOutputService, FileOutputService>();  
-            services.AddTransient<InputStringService>();
-            services.AddTransient<InputFloatProvider>();
-            services.AddTransient<InputOperandProvider>();
-            services.AddTransient<CalculatorProvider>();
-            services.AddTransient<OutputSelectionFactory>();
-            services.AddTransient<OutputProvider>();
-            services.AddOptions<ApplicationSettings>();
-            services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)));
-            
-            var serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = DependencyContainer.GetContainer();
             
             var inputFloatProvider = serviceProvider.GetRequiredService<InputFloatProvider>();
             var inputOperandProvider = serviceProvider.GetRequiredService<InputOperandProvider>();
-            var calculatorProvider = serviceProvider.GetRequiredService<CalculatorProvider>();
             var outputSelectionFactory = serviceProvider.GetRequiredService<OutputSelectionFactory>();
 
             var outputService = outputSelectionFactory.GetOutputService();
@@ -44,20 +24,17 @@ namespace Lxqtpr.Calculator
             outputService.Print("Enter second number (float)");
             var number2 = inputFloatProvider.GetNumber();
 
-            var operand = inputOperandProvider.GetOperand();
-            if (operand == OperandType.None)
+            var operation = inputOperandProvider.GetOperand();
+            if (operation is null)
             {
                 outputService.Print("Wrong operand. Good bue");
                 return;
             }
 
-            var result = calculatorProvider.Compute(number1, number2, operand);
-            if (result is not null)
-            {
-                var provider = serviceProvider.GetRequiredService<OutputProvider>();
-                provider.Print(result.Value.ToString("F"));
-            }
+            var result = operation.Execute(number1, number2);
+            outputService.Print(result.ToString("F"));
         }
     }
+    
 }
 

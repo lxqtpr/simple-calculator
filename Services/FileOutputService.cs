@@ -1,6 +1,6 @@
-﻿using Lxqtpr.Calculator.Services.Base;
+﻿using Lxqtpr.Calculator.Shell.Services.Base;
 
-namespace Lxqtpr.Calculator.Services;
+namespace Lxqtpr.Calculator.Shell.Services;
 
 public class FileOutputService : OutputServiceBase
 {

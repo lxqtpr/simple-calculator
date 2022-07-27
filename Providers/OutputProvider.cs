@@ -1,6 +1,6 @@
-﻿using Lxqtpr.Calculator.Services.Base;
+﻿using Lxqtpr.Calculator.Shell.Services.Base;
 
-namespace Lxqtpr.Calculator.Providers;
+namespace Lxqtpr.Calculator.Shell.Providers;
 
 public class OutputProvider
 {

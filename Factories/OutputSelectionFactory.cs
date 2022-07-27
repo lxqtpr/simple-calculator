@@ -1,5 +1,5 @@
-﻿using Lxqtpr.Calculator.Services;
-using Lxqtpr.Calculator.Services.Base;
+﻿using Lxqtpr.Calculator.Shell.Services;
+using Lxqtpr.Calculator.Shell.Services.Base;
 using Microsoft.Extensions.Options;
 
 namespace Lxqtpr.Calculator.Factories;

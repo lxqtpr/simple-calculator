@@ -1,8 +1,8 @@
 ﻿using Lxqtpr.Calculator.Factories;
-using Lxqtpr.Calculator.Services;
-using Lxqtpr.Calculator.Services.Base;
+using Lxqtpr.Calculator.Shell.Services;
+using Lxqtpr.Calculator.Shell.Services.Base;
 
-namespace Lxqtpr.Calculator.Providers;
+namespace Lxqtpr.Calculator.Shell.Providers;
 
 public class InputFloatProvider
     {
