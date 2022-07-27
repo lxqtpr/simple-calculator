@@ -1,17 +1,31 @@
 ﻿using Lxqtpr.Calculator.Providers;
 using Lxqtpr.Calculator.Services;
+using Lxqtpr.Calculator.Services.Base;
 
 namespace Lxqtpr.Calculator
 {
     internal static class Calculator
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var outputService = new OutputService();
+            if (!args.Any())
+            {
+                throw new ArgumentNullException();
+            }
+
+            IOutputService outputService;
+            
+            var values = args[0].Split('=');
+            if (values[1] == "console")
+            {
+                outputService = new ConsoleOutputService();
+            }
+            else { outputService = new MessageBoxOutputService(); }
+
             var inputStringService = new InputStringService();
             var inputService = new InputFloatProvider(outputService, inputStringService);
             var inputOperandService = new InputOperandProvider(outputService, inputStringService);
-            var calculatorService = new CalculatorService(outputService);
+            var calculatorService = new CalculatorProvider(outputService);
                 
             outputService.Print("Calculator v1.0.0");
 
@@ -28,7 +42,7 @@ namespace Lxqtpr.Calculator
                 return;
             }
 
-            var result = calculatorService.Calculate(number1, number2, operand);
+            var result = calculatorService.Compute(number1, number2, operand);
             if (result is not null)
             {
                 outputService.Print(result.Value.ToString("F"));

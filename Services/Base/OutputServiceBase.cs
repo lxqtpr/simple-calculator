@@ -1,6 +1,12 @@
 ﻿namespace Lxqtpr.Calculator.Services.Base;
 
-public class OutputServiceBase
+public abstract class OutputServiceBase: IOutputService
 {
-    
+    public void Print(string message)
+    {
+        if (message == null) throw new ArgumentNullException(nameof(message));
+        Output(message);
+    }
+
+    protected abstract void Output(string message);
 }

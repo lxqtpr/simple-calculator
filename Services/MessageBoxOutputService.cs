@@ -1,6 +1,11 @@
-﻿namespace Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Services.Base;
 
-public class MessageBoxOutputService
+namespace Lxqtpr.Calculator.Services;
+
+public class MessageBoxOutputService: OutputServiceBase
 {
-    
+    protected override void Output(string message)
+    {
+        MessageBox.Show(message);  
+    }
 }

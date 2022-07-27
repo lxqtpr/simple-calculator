@@ -1,13 +1,14 @@
 ﻿using Lxqtpr.Calculator.Services;
+using Lxqtpr.Calculator.Services.Base;
 
 namespace Lxqtpr.Calculator.Providers;
 
 public class InputOperandProvider
 {
-    private readonly OutputService _outputService;
+    private readonly IOutputService _outputService;
     private readonly InputStringService _inputStringService;
 
-    public InputOperandProvider(OutputService outputService, InputStringService inputStringService)
+    public InputOperandProvider(IOutputService outputService, InputStringService inputStringService)
     {
         _inputStringService = inputStringService;
         _outputService = outputService;

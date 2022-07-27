@@ -2,5 +2,5 @@
 
 public interface IOutputService
 {
-    
+     void Print(string message);
 }

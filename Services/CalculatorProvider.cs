@@ -1,10 +1,12 @@
-﻿namespace Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Services.Base;
 
-public class CalculatorService
+namespace Lxqtpr.Calculator.Services;
+
+public class CalculatorProvider
 {
-    private readonly OutputService _outputService;
+    private readonly IOutputService _outputService;
 
-    public CalculatorService(OutputService outputService)
+    public CalculatorProvider(IOutputService outputService)
     {
         _outputService = outputService;
     }

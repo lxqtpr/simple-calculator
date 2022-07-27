@@ -1,11 +1,12 @@
-﻿namespace Lxqtpr.Calculator.Services;
+﻿using Lxqtpr.Calculator.Services.Base;
 
-public class OutputService
+namespace Lxqtpr.Calculator.Services;
+
+public class ConsoleOutputService: OutputServiceBase
+{
+    protected override void Output(string message)
     {
-        public void Print(string message)
-        {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            Console.WriteLine(message);
-        }
+        Console.WriteLine(message);
     }
+}
 
