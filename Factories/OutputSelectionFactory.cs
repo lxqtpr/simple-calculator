@@ -1,24 +1,28 @@
 ﻿using Lxqtpr.Calculator.Services;
 using Lxqtpr.Calculator.Services.Base;
+using Microsoft.Extensions.Options;
 
 namespace Lxqtpr.Calculator.Factories;
 
 public class OutputSelectionFactory
 {
     private readonly IEnumerable<IOutputService> _outputService;
-
-    public OutputSelectionFactory(IEnumerable<IOutputService> outputServices)
+    private readonly ApplicationSettings _applicationSettings;
+    
+    public OutputSelectionFactory(IEnumerable<IOutputService> outputServices, IOptions<ApplicationSettings> options)
     {
         _outputService = outputServices;
+        _applicationSettings = options.Value;
     }
 
     public IOutputService GetOutputService(bool isUserConsole = true)
     {
-        if (isUserConsole)
+        var value = _applicationSettings.DefaultService;
+        return value switch
         {
-            return _outputService.First(x => x.GetType() == typeof(ConsoleOutputService));
-        }
-        return _outputService.First(x => x.GetType() == typeof(MessageBoxOutputService));
-
+            "Console" => _outputService.First(x => x.GetType() == typeof(ConsoleOutputService)),
+            "File" => _outputService.First(x => x.GetType() == typeof(FileOutputService)),
+            _ => throw new ArgumentNullException()
+        };
     }
 }

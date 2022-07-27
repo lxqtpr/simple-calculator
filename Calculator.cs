@@ -2,6 +2,7 @@
 using Lxqtpr.Calculator.Providers;
 using Lxqtpr.Calculator.Services;
 using Lxqtpr.Calculator.Services.Base;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lxqtpr.Calculator
@@ -10,24 +11,30 @@ namespace Lxqtpr.Calculator
     {
         private static void Main(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
 
             var services = new ServiceCollection();
-            services.AddTransient<IOutputService, ConsoleOutputService>();
-            services.AddTransient<IOutputService, MessageBoxOutputService>();
+            services.AddTransient<IOutputService, ConsoleOutputService>();  
+            services.AddTransient<IOutputService, FileOutputService>();  
             services.AddTransient<InputStringService>();
             services.AddTransient<InputFloatProvider>();
             services.AddTransient<InputOperandProvider>();
             services.AddTransient<CalculatorProvider>();
             services.AddTransient<OutputSelectionFactory>();
-
+            services.AddTransient<OutputProvider>();
+            services.AddOptions<ApplicationSettings>();
+            services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)));
+            
             var serviceProvider = services.BuildServiceProvider();
             
-            var outputServices = serviceProvider.GetServices<IOutputService>();
             var inputFloatProvider = serviceProvider.GetRequiredService<InputFloatProvider>();
             var inputOperandProvider = serviceProvider.GetRequiredService<InputOperandProvider>();
             var calculatorProvider = serviceProvider.GetRequiredService<CalculatorProvider>();
+            var outputSelectionFactory = serviceProvider.GetRequiredService<OutputSelectionFactory>();
 
-            var outputService = ProcessArguments(args, outputServices);
+            var outputService = outputSelectionFactory.GetOutputService();
             
             outputService.Print("Calculator v4.0.0");
 
@@ -47,24 +54,9 @@ namespace Lxqtpr.Calculator
             var result = calculatorProvider.Compute(number1, number2, operand);
             if (result is not null)
             {
-                outputService.Print(result.Value.ToString("F"));
+                var provider = serviceProvider.GetRequiredService<OutputProvider>();
+                provider.Print(result.Value.ToString("F"));
             }
-            
-        }
-
-        private static IOutputService ProcessArguments(string[] args, IEnumerable<IOutputService> outputServices)
-        {
-            if (!args.Any())
-            {
-                throw new ArgumentNullException();
-            }
-            var values = args[0].Split('=');
-            if (values[1] == "console")
-            {
-              return outputServices.First(x => x.GetType() == typeof(ConsoleOutputService));
-            }
-            return outputServices.First(x => x.GetType() == typeof(MessageBoxOutputService));
-            
         }
     }
 }
